@@ -6,4 +6,6 @@ html,
 body,
 :root {
   height: 100%;
+  /* bg-bisque color change in-case */
+  background-color: bisque;
 }
