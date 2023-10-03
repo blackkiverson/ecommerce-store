@@ -9,6 +9,8 @@ import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+
 const Summary = () => {
     const searchParams = useSearchParams();
     const items = useCart((state) => state.items);
@@ -37,10 +39,19 @@ const Summary = () => {
         window.location = response.data.url;
     }
 
-    return ( 
-        <div
-            className="
-            mt-16
+    // const initialOptions = {
+    //   "clientId": "<test>",
+    //   "enable-funding":
+    //     "paypal.FUNDING.PAYPAL,paypal.FUNDING.VENMO,paypal.FUNDING.PAYLATER,paypal.FUNDING.CARD",
+    //   "data-sdk-integration-source": "integrationbuilder_sc",
+    // };
+
+    // const fundingSource = initialOptions["enable-funding"];
+    // const paypal = fundingSource;
+
+    return (
+      <div
+        className="mt-16
             rounded-lg
             bg-gray-50
             px-4
@@ -48,25 +59,41 @@ const Summary = () => {
             sm:p-6
             lg:col-span-5
             lg:mt-0
-            lg:p-8
-            "
-        >
-            <h2 className="text-lg font-medium text-gray-900">
-                Order Summary
-            </h2>
-            <div className="mt-6 space-y-4">
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                    <div className="text-base font-medium text-gray-900">
-                        Order Total
-                    </div>
-                    <Currency value={totalPrice}/>
-                </div>
+            lg:p-8"
+      >
+        <div>
+          <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+          <div className="mt-6 space-y-4">
+            <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+              <div className="text-base font-medium text-gray-900">
+                Order Total
+              </div>
+              <Currency value={totalPrice} />
             </div>
-            <Button disabled={items.length === 0}  onClick={onCheckout} className="w-full mt-6">
-                Checkout
-            </Button>
+          </div>
+          <Button
+            disabled={items.length === 0}
+            onClick={onCheckout}
+            className="w-full mt-6"
+          >
+            Stripe Checkout
+          </Button>
+
+          <PayPalScriptProvider options={{ clientId : process.env.PAYPAL_CLIENT_ID ?? "test", dataClientToken: process.env.PAYPAL_CLIENT_SECRET }}>
+            <PayPalButtons
+              style={{
+                shape: "pill",
+                color: "gold",
+                layout: "vertical",
+              }}
+              disabled={items.length === 0}
+              onClick={onCheckout}
+              className="w-full mt-6"
+            />
+          </PayPalScriptProvider>
         </div>
-     );
+      </div>
+    );
 }
  
 export default Summary;

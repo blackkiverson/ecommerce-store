@@ -3,7 +3,10 @@
         "cloudinary",
         "clsx",
         "headlessui",
+        "integrationbuilder",
         "lucide",
+        "PAYLATER",
+        "VENMO",
         "zustand"
     ]
 }
